@@ -8,7 +8,7 @@
 		
 		/***************** To Create New Transaction *****************/
 		public function createTransaction(){
-			$this->db->query("INSERT INTO transactions (customerId, status, active, createdOn, createdBy) VALUE (:customerId, 'PENDING', '1', now(), 'System')");
+			$this->db->query("INSERT INTO transactions (customerId, createdOn, createdBy) VALUE (:customerId, now(), 'System')");
 			
 			/****STATUS is only "PENDING", "FOR PAYMENT", "FOR SHIPPING", "COMPLETED", "CANCELLED" ************/
 			/*** CREATE NEW TRANSACTION WHEN THERE IS NO ACTIVE TRANSACTION ***/
@@ -269,7 +269,7 @@
 		
 		/******** CHECKOUT *************/
 		public function checkoutDelivery($data){
-			$this->db->query("INSERT INTO delivery (transactionID, status, method, shippingAddress, createdDate, createdBy) VALUES (:transactionId, :status, :shippingMethod, :shippingAddress, now(), :createdBy)");
+			$this->db->query("INSERT INTO delivery (transactionID, method, shippingAddress, createdDate, createdBy) VALUE (:transactionId, :shippingMethod, :shippingAddress, now(), :createdBy)");
 			
 			// if createdBy is not specified
 			if(!isset($data["createdBy"])){
@@ -278,7 +278,6 @@
 			
 			// Bind Values
 			$this->db->bind(":transactionId", $data["transactionId"]);
-			$this->db->bind(':status', 'PENDING');
 			$this->db->bind(":shippingMethod", $data["shippingMethod"]);
 			$this->db->bind(":shippingAddress", $data["shippingAddress"]);
 			$this->db->bind(":createdBy", $data["createdBy"]);
@@ -292,12 +291,11 @@
 		}
 		
 		public function checkoutPayment($data){
-			$this->db->query("INSERT INTO payments (transactionId, method, status, amount) VALUE (:transactionId, :paymentMethod, :status, :amount)");
+			$this->db->query("INSERT INTO payments (transactionId, method, amount) VALUE (:transactionId, :paymentMethod, :amount)");
 			
 			// Bind Values
 			$this->db->bind(":transactionId", $data["transactionId"]);
 			$this->db->bind(":paymentMethod", $data["paymentMethod"]);
-			$this->db->bind(":status", 'FOR PAYMENT');
 			$this->db->bind(":amount", $data["amount"]);
 			
 			// Execute
