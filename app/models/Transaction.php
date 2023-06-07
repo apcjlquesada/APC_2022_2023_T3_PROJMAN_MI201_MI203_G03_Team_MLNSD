@@ -95,7 +95,7 @@
 				FROM transactions t
 				LEFT JOIN customers c ON c.id = t.customerId
 				LEFT JOIN payments p ON p.transactionId = t.id
-         		WHERE t.active = 1 AND t.status = 'For Payment'");
+         		WHERE t.active = 1 AND t.status = 'FOR PAYMENT'");
 			
 			
 			$results = $this->db->resultSet();
