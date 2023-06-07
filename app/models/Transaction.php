@@ -292,12 +292,13 @@
 		}
 		
 		public function checkoutPayment($data){
-			$this->db->query("INSERT INTO payments (transactionId, method, status, amount) VALUE (:transactionId, :paymentMethod, :status, :amount)");
+			$this->db->query("INSERT INTO payments (transactionId, method, status, amount, paidDate, paidBy) VALUE (:transactionId, :paymentMethod, :status, :amount, now(), :paidBy)");
 			
 			// Bind Values
 			$this->db->bind(":transactionId", $data["transactionId"]);
 			$this->db->bind(":paymentMethod", $data["paymentMethod"]);
 			$this->db->bind(":status", 'FOR PAYMENT');
+			$this->db->bind(":paidBy", 'Customer');
 			$this->db->bind(":amount", $data["amount"]);
 			
 			// Execute
