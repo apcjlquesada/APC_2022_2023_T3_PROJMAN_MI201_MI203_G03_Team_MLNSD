@@ -61,7 +61,13 @@
 
         // Execute a prepared statement
         public function execute(){
-            return $this->stmt->execute();
+            try {
+                echo $this->stmt->queryString;  // Debug: Print the SQL query
+                var_dump($this->stmt->debugDumpParams());  // Debug: Print the parameter bindings
+                return $this->stmt->execute();
+            } catch(PDOException $e) {
+                echo $e->getMessage();  // Debug: Print any exception/error message
+            }
         }
 
         // Get resultset as array of objects
